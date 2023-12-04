@@ -1,0 +1,22 @@
+version: '3.8'
+name: app-gestao-financeira
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  mongo1:
+    hostname: mongo1
+    container_name: mongo1
+    image: mongo:5
+    networks:
+      - backend
+    volumes:
+      - ./volumes/mongo1:/mongo/data/mongo1
+      - ./dump:/dump
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    restart: always
