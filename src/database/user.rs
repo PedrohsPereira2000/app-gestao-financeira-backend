@@ -7,13 +7,18 @@ use crate::routes::auth::UserData;
 use crate::routes::register::RegisterData;
 use dotenv::dotenv;
 
+pub struct GetUser {
+    pub success: bool,
+    pub user: Document,
+    pub message: String,
+}
+
 pub struct AuthResult {
     pub success: bool,
     pub user_id: Option<ObjectId>,
     pub name: String,
     pub message: String,
 }
-
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct RegisterResult {
@@ -94,4 +99,30 @@ pub async fn create_user(user: RegisterData) -> Result<RegisterResult, MongoErro
         success: true,
         message: "Usuário criado com sucesso".to_string(),
     })
+}
+
+pub async fn get_user(filter: Document) -> Result<(GetUser), MongoError> {
+    let collection = create_connection().await?;
+    match collection.find_one(filter.clone(), None).await {
+        Ok(Some(doc)) => {
+            info!("Usuário encontrado com sucesso!");
+            Ok(GetUser {
+                success: true,
+                user: doc,
+                message: "Usuário validado com sucesso!".to_string(),
+            })
+        }
+        Ok(None) => {
+            info!("Usuário não encontrado ou senha incorreta");
+            Ok(GetUser {
+                success: false,
+                user: Document::new(),
+                message: "Usuário ou senha inválidos".to_string(),
+            })
+        }
+        Err(e) => {
+            error!("Erro durante a validação do usuário: {:?}", e);
+            Err(e)
+        }
+    }
 }

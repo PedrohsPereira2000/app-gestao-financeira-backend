@@ -1,5 +1,5 @@
 use actix_web::{web, App, HttpServer, HttpResponse, Responder};
-use crate::database::connection::create_user;
+use crate::database::user::create_user;
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct RegisterData {

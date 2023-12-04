@@ -1,5 +1,5 @@
 use actix_web::{web, App, HttpServer, HttpResponse, Responder};
-use crate::database::connection::validate_user;
+use crate::database::user::validate_user;
 use bson::{doc, Bson};
 
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
