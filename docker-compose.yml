@@ -6,6 +6,30 @@ networks:
     driver: bridge
 
 services:
+  # frontend:
+  #   build:
+  #     context: ../app-gerenciamento-financeiro-frontend
+  #   container_name: frontend
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - backend
+  #   volumes:
+  #     - ../app-gerenciamento-financeiro-frontend:/usr/src/app
+
+  backend:
+    build:
+      context: .
+    container_name: backend
+    depends_on:
+      - mongo1
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+
   mongo1:
     hostname: mongo1
     container_name: mongo1
@@ -15,8 +39,6 @@ services:
     volumes:
       - ./volumes/mongo1:/mongo/data/mongo1
       - ./dump:/dump
-    expose:
-      - 27017
     ports:
       - 27017:27017
     restart: always
